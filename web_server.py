@@ -27,7 +27,7 @@ def open_socket(ip):
     connection.listen(1)
     return connection
 
-def webpage():
+def webpage(): #-------------------- REVER DAQUI
     #Template html
     html = f"""
             <!DOCTYPE html>
