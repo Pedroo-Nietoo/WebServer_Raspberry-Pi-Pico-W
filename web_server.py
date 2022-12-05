@@ -4,11 +4,11 @@ from time import sleep
 from picozero import pico_temp_sensor, pico_led
 import machine
 
-ssid = 'Nicolly_NeoRede2.4'
-password = '32474573'
+ssid = 'NOME DA REDE WI-FI'
+password = 'SENHA DA REDE WI-FI'
 
 def connect():
-    #Connect to WLAN
+    #Conecta à WLAN
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
@@ -20,14 +20,14 @@ def connect():
     return ip
 
 def open_socket(ip):
-    #Open a socket
+    #Abre um socket
     address = (ip, 80)
     connection = socket.socket()
     connection.bind(address)
     connection.listen(1)
     return connection
 
-def webpage(): #-------------------- REVER DAQUI
+def webpage():
     #Template html
     html = f"""
             <!DOCTYPE html>
@@ -46,16 +46,28 @@ def webpage(): #-------------------- REVER DAQUI
     return str(html)
 
 def serve(connection):
-    #Start a web page
+    #Inicia uma web page
     state = 'OFF'
     pico_led.off()
     temperature = 0
     while True:
-        client = connection.accept()[0]
-        request = client.recv(1024)
-        request = str(request)
-        print(request)
-        client.close()
+    client = connection.accept()[0]
+    request = client.recv(1024)
+    request = str(request)
+    try:
+        request = request.split()[1]
+    except IndexError:
+        pass
+    if request == '/lighton?':
+        pico_led.on()
+        state = 'ON'
+    elif request =='/lightoff?':
+        pico_led.off()
+        state = 'OFF'
+    temperature = pico_temp_sensor.temp
+    html = webpage(temperature, state)
+    client.send(html)
+    client.close()
         
 try:
     ip = connect()
