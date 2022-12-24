@@ -4,8 +4,8 @@ from time import sleep
 from picozero import pico_temp_sensor, pico_led
 import machine
 
-ssid = 'NOME DA REDE WI-FI'
-password = 'SENHA DA REDE WI-FI'
+ssid = '####' #Substitua as hashtags pelo nome da rede
+password = '####' #Substitua as hashtags pela senha da rede
 
 def connect():
     #Conecta à WLAN
